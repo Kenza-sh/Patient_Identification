@@ -1,6 +1,6 @@
 import azure.functions as func
-import logging
 from transformers import AutoTokenizer, AutoModelForTokenClassification, pipeline
+import logging
 import re
 import dateparser
 import json
