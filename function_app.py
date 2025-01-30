@@ -65,7 +65,7 @@ class InformationExtractor:
                 date_obj = dateparser.parse(date_str)
                 if date_obj:
                     formatted_date = date_obj.strftime("%Y-%m-%d")
-                    logger.info(f"Date de naissance extraites : {formatted_date}")
+                    logger.info(f"Date de naissance extraite : {formatted_date}")
                     return formatted_date
                 else:
                     logger.warning(f"Date non valide extraites : {date_str}")
