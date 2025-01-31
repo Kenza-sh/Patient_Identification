@@ -53,31 +53,31 @@ def detect_type_examen( titre):
         return "AUTRE"
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
-    """Gère la requête en fonction du texte reçu"""
-    logger.info("Début du traitement de la requête HTTP")
+    logging.info('Python HTTP trigger function processed a request.')
+
     try:
         req_body = req.get_json()
-        logger.info("Corps de la requête JSON récupéré avec succès")
-    except ValueError:
-        logger.error("Erreur lors de la récupération du corps de la requête. Le JSON est invalide.")
-        return func.HttpResponse("Invalid JSON", status_code=400)
+        query = req_body.get('text')
 
-    texte = req_body.get("texte", "").strip()
+        if not query:
+            return func.HttpResponse(
+                json.dumps({"error": "No query provided in request body"}),
+                mimetype="application/json",
+                status_code=400
+            )
 
-    # Vérification des paramètres
-    if not texte:
-        logger.warning("Paramètre 'texte' manquant ou invalide.")
-        return func.HttpResponse("Le paramètre 'texte' est requis", status_code=400)
-    logger.info(f"Texte reçu : {texte[:50]}...")  # Affichage limité pour ne pas exposer de données sensibles dans les logs
+        result = detect_type_examen(query)
 
-    # Exécution de la fonction de détection de type d'examen
-    try:
-        result = detect_type_examen(texte)
-        logger.info(f"Résultat de la détection : {result}")
-        return func.HttpResponse(json.dumps({"type_examen": result}), mimetype="application/json", status_code=200)
+        return func.HttpResponse(
+            json.dumps({"response": result}),
+            mimetype="application/json"
+        )
+
     except Exception as e:
-        logger.error(f"Erreur lors de l'extraction du type d'examen : {str(e)}")
-        return func.HttpResponse(f"Erreur lors de l'extraction : {str(e)}", status_code=500)
-
-       
+        logging.error(f"Error processing request: {str(e)}")
+        return func.HttpResponse(
+            json.dumps({"error": str(e)}),
+            mimetype="application/json",
+            status_code=500
+        )
            
