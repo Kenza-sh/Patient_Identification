@@ -4,11 +4,6 @@ import re
 import json
 
 
-app =func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
-# Configuration du logger optimisée pour Azure Functions
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-
 def detect_type_examen( titre):
         def normalize_type(text):
               replacements = {
@@ -57,9 +52,7 @@ def detect_type_examen( titre):
 
         return "AUTRE"
 
-
-@app.route(route="detect_exam")
-def detect_exam(req: func.HttpRequest) -> func.HttpResponse:
+def main(req: func.HttpRequest) -> func.HttpResponse:
     """Gère la requête en fonction du texte reçu"""
     logger.info("Début du traitement de la requête HTTP")
     try:
